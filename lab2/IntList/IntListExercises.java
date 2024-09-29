@@ -11,11 +11,9 @@ public class IntListExercises {
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
         int listSize = lst.size();
-        int i = 0 ;
-        while (i < listSize ) {
+        while (head != null ) {
             head.first += c;
             head = head.rest;
-            i++;
         }
     }
 
