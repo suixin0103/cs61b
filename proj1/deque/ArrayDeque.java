@@ -1,27 +1,28 @@
 package deque;
 import java.util.Iterator;
 
-public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
-    private Item[] items;
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
+    private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
 
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
+        items = (T[]) []) new Object[8];
         size = 0;
         nextFirst = 3;
         nextLast = 4;
     }
 
-    public ArrayDeque(Item item) {
-        items = (Item[]) new Object[8];
+    public ArrayDeque(T item) {
+        items = (T[]) new Object[8];
         items[3] = item;
         size = 1;
         nextFirst = 2;
         nextLast = 4;
     }
 
+    /**
     public ArrayDeque(ArrayDeque<Item> other) {
         this();
         for (int i = 0; i < other.size(); i++) {
@@ -29,8 +30,10 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
         }
     }
 
+     */
+
     @Override
-    public void addFirst(Item item) {
+    public void addFirst(T item) {
         if (size == items.length) {
             resize(size * 2);
         }
@@ -40,7 +43,7 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
     @Override
-    public void addLast(Item item) {
+    public void addLast(T item) {
         if (size == items.length) {
             resize(size * 2);
         }
@@ -50,7 +53,7 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
     public void resize(int capacity) {
-        Item[] newItems = (Item[]) new Object[capacity];
+        T[] newItems = (T[]) new Object[capacity];
         int current = (nextFirst + 1) % items.length;
         for (int i = 0; i < size; i++) {
             newItems[i] = items[current];
@@ -82,12 +85,12 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
     @Override
-    public Item removeFirst() {
+    public T removeFirst() {
         if (isEmpty()) {
             return null;
         }
         nextFirst = (nextFirst + 1) % items.length;
-        Item removeValue = items[nextFirst];
+        T removeValue = items[nextFirst];
         items[nextFirst] = null;
         size--;
         if ((size < items.length / 4 && size > 0)) {
@@ -97,12 +100,12 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
     @Override
-    public Item removeLast() {
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         }
         nextLast = (nextLast - 1 + items.length) % items.length;
-        Item valueRemove = items[nextLast];
+        T valueRemove = items[nextLast];
         items[nextLast] = null;
         size--;
         if ((size < items.length / 4) && size > 0) {
@@ -112,12 +115,12 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
     @Override
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new ArrayDequeIterator();
     }
 
     @Override
-    public Item get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
@@ -148,22 +151,22 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
         return true;
     }
 
-    private class ArrayDequeIterator implements Iterator<Item> {
-        int Pos;
+    private class ArrayDequeIterator implements Iterator<T> {
+        int pos;
 
-        public ArrayDequeIterator() {
-            Pos = (nextFirst + 1) % items.length;
+        ArrayDequeIterator() {
+            pos = (nextFirst + 1) % items.length;
         }
 
         @Override
         public boolean hasNext() {
-            return Pos != nextLast;
+            return pos != nextLast;
         }
 
         @Override
-        public Item next() {
-            Item returnValue = items[Pos];
-            Pos = (Pos + 1) % items.length;
+        public T next() {
+            T returnValue = items[pos];
+            pos = (pos + 1) % items.length;
             return returnValue;
         }
     }

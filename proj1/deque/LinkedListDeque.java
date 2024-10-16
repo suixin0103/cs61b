@@ -1,18 +1,15 @@
 package deque;
 
-import java.util.Arrays;
 import java.util.Iterator;
-import jh61b.junit.In;
-import java.util.LinkedList;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     private static class Node<T> {
-        public T item;
-        public Node<T> prev;
-        public Node<T> next;
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
 
-        public Node(T item, Node<T> prev, Node<T> next) {
+        Node(T item, Node<T> prev, Node<T> next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
@@ -29,12 +26,13 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         size = 0;
     }
 
-    public LinkedListDeque(LinkedListDeque<T> other) {
+    /**public LinkedListDeque(LinkedListDeque<T> other) {
         this();
         for (int i = 0; i < other.size(); i++) {
             addLast(other.get(i));
         }
     }
+    */
 
     @Override
     public void addFirst(T item) {
@@ -137,21 +135,21 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) {
+        if (o == null) {
             return false;
         }
-        if(this == o) {
+        if (this == o) {
             return true;
         }
-        if(o instanceof LinkedListDeque) {
+        if (!(o instanceof LinkedListDeque)) {
             return false;
         }
         LinkedListDeque<?> lld = (LinkedListDeque<?>) o;
-        if(lld.size != this.size) {
+        if (lld.size != this.size) {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if(lld.get(i) != get(i)) {
+            if (lld.get(i).equals(i)) {
                 return false;
             }
         }
@@ -165,18 +163,16 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     }
     private class LinkedListDequeIterator implements Iterator<T> {
         private Node<T> p;
-        public void LinkedListDequeIterator() {
+        LinkedListDequeIterator() {
             p = sentinel;
         }
         public boolean hasNext() {
-            if(p.next == sentinel) {
-                return false;
-            }
-            p = p.next;
-            return true;
+            return p.next != sentinel;
         }
         public T next() {
-            return p.item;
+            T returnValue = p.item;
+            p = p.next;
+            return returnValue;
         }
     }
 }
