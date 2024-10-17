@@ -14,14 +14,14 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         nextLast = 4;
     }
 
-    public ArrayDeque(T item) {
+    /**public ArrayDeque(T item) {
         items = (T[]) new Object[8];
         items[3] = item;
         size = 1;
         nextFirst = 2;
         nextLast = 4;
     }
-
+    /
     /**
     public ArrayDeque(ArrayDeque<Item> other) {
         this();
@@ -78,8 +78,8 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void printDeque() {
         for (int i = 0; i < size; i++) {
-            int Pos = (nextFirst + 1) % items.length;
-            System.out.print(items[Pos] + " ");
+            int pos = (nextFirst + 1) % items.length;
+            System.out.print(items[pos] + " ");
         }
         System.out.println();
     }
@@ -144,7 +144,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if (ad.get(i) != get(i)) {
+            if (!(ad.get(i).equals(get(i)))) {
                 return false;
             }
         }
