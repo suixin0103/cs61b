@@ -6,7 +6,15 @@ import org.junit.Assert;
 import edu.princeton.cs.algs4.StdRandom;
 public class ArrayDequeTest {
     @Test
-    public  void Test1(){
+    public void addLastTest() {
+        ArrayDeque<Integer> testArray = new ArrayDeque<>();
+        testArray.addLast(1);
+        assertEquals("The size should be 1", 1 , testArray.size());
+        testArray.addLast(2);
+        assertEquals("The size should be 1", 2 , testArray.size());
+    }
+    @Test
+    public  void randomTest(){
         int M = 5000;
         ArrayDeque<Integer> testDeque = new ArrayDeque<>();
         for(int i = 0;i < 5000; i++) {
