@@ -23,7 +23,7 @@ public class GuitarString {
         capacity = (int) capacity;
         buffer = new LinkedListDeque<Double>();
         for (int i = 0; i < capacity; i++) {
-                  buffer.addLast(0.0);
+            buffer.addLast(0.0);
         }
     }
 
@@ -46,12 +46,12 @@ public class GuitarString {
      * the Karplus-Strong algorithm.
      */
     public void tic() {
-        double removeValue = buffer.removeFirst();;
+        double removeValue = buffer.removeFirst();
         buffer.addLast((removeValue + buffer.get(0)) * DECAY * 0.5);
     }
-
     /* Return the double at the front of the buffer. */
     public double sample() {
         return buffer.get(0);
     }
 }
+
