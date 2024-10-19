@@ -14,6 +14,26 @@ public class ArrayDequeTest {
         assertEquals("The size should be 1", 2 , testArray.size());
     }
     @Test
+    public void equalTest() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+        ArrayDeque<Integer> ad2 = new ArrayDeque<>();
+        for (int i = 0; i < 100; i++) {
+            ad2.addLast(i);
+            ad1.addLast(i);
+            Assert.assertTrue(ad2.equals(ad1));
+        }
+    }
+    @Test
+    public void equalStringTest() {
+        ArrayDeque<String> ad1 = new ArrayDeque<>();
+        ArrayDeque<String> ad2 = new ArrayDeque<>();
+        ad1.addLast("Hello");
+        ad2.addLast("Hello");
+        ad1.addLast("World");
+        ad2.addLast("World");
+        Assert.assertTrue(ad1.equals(ad2));
+    }
+    @Test
     public  void randomTest(){
         int M = 5000;
         ArrayDeque<Integer> testDeque = new ArrayDeque<>();

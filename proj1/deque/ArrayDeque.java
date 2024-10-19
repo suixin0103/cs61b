@@ -52,7 +52,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         size++;
     }
 
-    public void resize(int capacity) {
+    private void resize(int capacity) {
         T[] newItems = (T[]) new Object[capacity];
         int current = (nextFirst + 1) % items.length;
         for (int i = 0; i < size; i++) {
@@ -132,7 +132,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             return false;
         }
         ArrayDeque<?> ad = (ArrayDeque<?>) o;
-        if (ad.size != size) {
+        if (ad.size() != size) {
             return false;
         }
         for (int i = 0; i < size; i++) {

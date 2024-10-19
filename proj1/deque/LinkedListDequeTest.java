@@ -1,5 +1,6 @@
 package deque;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -110,6 +111,26 @@ public class LinkedListDequeTest {
 
     }
 
+    @Test
+    public void equalTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+        for (int i = 0; i < 100; i++) {
+            lld1.addLast(i);
+            lld2.addLast(i);
+            Assert.assertTrue(lld1.equals(lld2));
+        }
+    }
+    @Test
+    public void equalStringTest() {
+        LinkedListDeque<String> lld1 = new LinkedListDeque<>();
+        LinkedListDeque<String> lld2 = new LinkedListDeque<>();
+        lld1.addLast("Hello");
+        lld2.addLast("Hello");
+        lld1.addLast("World");
+        lld2.addLast("World");
+        Assert.assertTrue(lld1.equals(lld2));
+    }
     @Test
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
