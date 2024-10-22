@@ -131,20 +131,21 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof ArrayDeque)) {
+        if (!(o instanceof Deque)) {
             return false;
         }
-        ArrayDeque<?> ad = (ArrayDeque<?>) o;
-        if (ad.size() != size) {
+        Deque<T> oa = (Deque<T>) o;
+        if (oa.size() != this.size()) {
             return false;
         }
-        for (int i = 0; i < size; i++) {
-            if (ad.get(i) != get(i)) {
+        for (int i = 0; i < size; i += 1) {
+            if (!(oa.get(i).equals(this.get(i)))) {
                 return false;
             }
         }
         return true;
     }
+
     private class ArrayDequeIterator implements Iterator<T> {
         int pos;
 
