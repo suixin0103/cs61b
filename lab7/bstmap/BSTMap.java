@@ -28,6 +28,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
 
     @Override
     public boolean containsKey(K key) {
+        if (key == null) throw new IllegalArgumentException("can't search with null key");
         return get(root, key) != null;
     }
 
@@ -89,7 +90,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
             return node.right;
         }
         node.left = DeleteMin(node.left);
-        node.size = 1 + size(root.left) + size(root.right);
+        node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
     private void DeleteMax() {
@@ -115,10 +116,10 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         if(node == null) return null;
         int cmp = node.key.compareTo(key);
         if (cmp < 0) {
-            root.left = remove(root.left, key);
+            node.left = remove(node.left, key);
         }
         else if (cmp > 0) {
-            root.right = remove(root.right, key);
+            node.right = remove(node.right, key);
         }
         else {
             removeValue = node.value;
@@ -141,7 +142,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
 
     private BstNode findMin(BstNode node) {
         while (node.left != null) {
-            return findMin(node.left);
+            node = node.left;
         }
         return node;
     }
@@ -163,7 +164,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         else if (cmp > 0) {
             node.right = remove(node.right, key, value);
         }
-        else  if (value.equals(node.value))
+        else  if (value != null && value.equals(node.value))
         {
             removeValue = node.value;
             if (node.left == null) {
@@ -177,6 +178,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
             node.value = minNode.value;
             remove(root.right, minNode.key);
         }
+        node.size = 1 +size(node.left) + size(node.right);
         return node;
     }
 
