@@ -2,17 +2,13 @@ package bstmap;
 
 
 import java.nio.file.Path;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 import static java.nio.file.Files.delete;
 
 public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     private BstNode root;
-
-
+    private V removeValue;
     private class BstNode  {
         K key;
         V value;
@@ -21,7 +17,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         public BstNode(K key, V value) {
             this.key = key;
             this.value = value;
-            size = 0;
+            size = 1;
         }
     }
 
@@ -32,32 +28,24 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
 
     @Override
     public boolean containsKey(K key) {
-        return containsKey(root, key);
+        return get(root, key) != null;
     }
-    private boolean containsKey(BstNode Node, K key) {
-        if (Node == null) return false;
-        if (Node.key.equals(key)) return true;
-        return containsKey(Node.left, key) || containsKey(Node.right, key);
-    }
+
     @Override
     public V get(K key) {
         return get(root, key);
     }
     private V get(BstNode node, K key) {
-        if (node == null) {
-            return null;
-        }
+        if (node == null) return null;
         int cmp = key.compareTo(node.key);
-        if (cmp == 0) {
-            return node.value;
+        if (cmp < 0) {
+            return get(node.left, key);
         }
-         else if (cmp < 0) {
-            return get(node.left, key); // 在左子树中继续查找
-        } else {
-            return get(node.right, key); // 在右子树中继续查找
+        else if (cmp > 0) {
+            return get(node.right, key);
         }
+        return node.value;
     }
-
     public int size(BstNode node) {
         if (node == null) return 0;
         return node.size;
@@ -73,23 +61,20 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         root = put(root, key, value);
     }
     private BstNode put(BstNode node, K key, V value) {
-        if (node == null) {
-            return new BstNode(key, value);
-        }
-        int cmp = key.compareTo((K) node.key);
+        if (node == null) return new BstNode(key, value);
+        int cmp = node.key.compareTo(key);
         if (cmp == 0) {
             node.value = value;
         }
-        if (cmp < 0) {
+        else if (cmp < 0) {
             node.left = put(node.left, key, value);
         }
-        else if (cmp > 0) {
+        else {
             node.right = put(node.right, key, value);
         }
-        node.size = 1 + size(node.left) + size(node.right);
+        node.size  = 1 + node.left.size + node.right.size;
         return node;
     }
-
     @Override
     public Set<K> keySet() {
         throw new UnsupportedOperationException();
@@ -103,7 +88,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         if (node.left == null) {
             return node.right;
         }
-        root.left = DeleteMin(node.left);
+        node.left = DeleteMin(node.left);
         node.size = 1 + size(root.left) + size(root.right);
         return node;
     }
@@ -115,18 +100,84 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         if (node.right == null) {
             return node.left;
         }
-        root.right = DeleteMax(root.right);
+        node.right = DeleteMax(root.right);
         node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        if (key == null) throw new IllegalArgumentException("can't delete with a null key");
+        removeValue = null;
+        root = remove(root, key);
+        return removeValue;
+    }
+    private BstNode remove(BstNode node, K key) {
+        if(node == null) return null;
+        int cmp = node.key.compareTo(key);
+        if (cmp < 0) {
+            root.left = remove(root.left, key);
+        }
+        else if (cmp > 0) {
+            root.right = remove(root.right, key);
+        }
+        else {
+            removeValue = node.value;
+            if (node.left == null) {
+                return node.right;
+            }
+            else if (node.right == null) {
+                return  node.right;
+            }
+            else {
+                BstNode minNode = findMin(node.right);
+                node.key = minNode.key;
+                node.value = minNode.value;
+                node.right = remove(node.right, node.key);
+            }
+        }
+        node.size = 1 + size(node.left) + size(node.right);
+        return node;
     }
 
+    private BstNode findMin(BstNode node) {
+        while (node.left != null) {
+            return findMin(node.left);
+        }
+        return node;
+    }
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (size() == 0) throw new NoSuchElementException("Symbol table underflow");
+        if(key == null) throw new IllegalArgumentException("can't remove null");
+        removeValue = null;
+        root = remove(root, key, value);
+        return removeValue;
+
+    }
+    private BstNode remove(BstNode node, K key, V value) {
+        if (node == null) return null;
+        int cmp = node.key.compareTo(key);
+        if (cmp < 0) {
+            node.left = remove(node.left, key, value);
+        }
+        else if (cmp > 0) {
+            node.right = remove(node.right, key, value);
+        }
+        else  if (value.equals(node.value))
+        {
+            removeValue = node.value;
+            if (node.left == null) {
+                return node.right;
+            }
+            else if (node.right == null) {
+                return node.left;
+            }
+            BstNode minNode = findMin(node.right);
+            node.key = minNode.key;
+            node.value = minNode.value;
+            remove(root.right, minNode.key);
+        }
+        return node;
     }
 
     @Override
