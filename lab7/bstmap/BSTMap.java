@@ -9,6 +9,7 @@ import static java.nio.file.Files.delete;
 public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     private BstNode root;
     private V removeValue;
+    private int size;
     private class BstNode  {
         K key;
         V value;
@@ -24,16 +25,32 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     @Override
     public void clear() {
         root = null;
+        size = 0;
+        removeValue = null;
     }
 
     @Override
     public boolean containsKey(K key) {
         if (key == null) throw new IllegalArgumentException("can't search with null key");
-        return get(root, key) != null;
+        return containsKey(root, key);
+    }
+    private boolean containsKey(BstNode node, K key) {
+        if (node == null) return false;
+        int cmp = key.compareTo(node.key);
+        if (cmp < 0) {
+            return containsKey(node.left, key);
+        }
+        else if (cmp > 0) {
+            return containsKey(node.right, key);
+        }
+        else {
+            return true;
+        }
     }
 
     @Override
     public V get(K key) {
+        if (key == null) throw new IllegalArgumentException("key can't be null");
         return get(root, key);
     }
     private V get(BstNode node, K key) {
@@ -63,7 +80,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     }
     private BstNode put(BstNode node, K key, V value) {
         if (node == null) return new BstNode(key, value);
-        int cmp = node.key.compareTo(key);
+        int cmp = key.compareTo(node.key);
         if (cmp == 0) {
             node.value = value;
         }
@@ -78,7 +95,15 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     }
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        Set<K> kSet = new HashSet<>();
+        inOrderTraversal(root, kSet);
+        return kSet;
+    }
+    private void inOrderTraversal(BstNode node, Set<K> ks) {
+        if (node == null) return;
+        inOrderTraversal(node.left, ks);
+        ks.add(node.key);
+        inOrderTraversal(node.right, ks);
     }
 
     private void DeleteMin() {
@@ -101,7 +126,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         if (node.right == null) {
             return node.left;
         }
-        node.right = DeleteMax(root.right);
+        node.right = DeleteMax(node.right);
         node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
@@ -114,7 +139,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     }
     private BstNode remove(BstNode node, K key) {
         if(node == null) return null;
-        int cmp = node.key.compareTo(key);
+        int cmp = key.compareTo(node.key);
         if (cmp < 0) {
             node.left = remove(node.left, key);
         }
@@ -127,7 +152,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
                 return node.right;
             }
             else if (node.right == null) {
-                return  node.right;
+                return  node.left;
             }
             else {
                 BstNode minNode = findMin(node.right);
@@ -157,7 +182,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
     }
     private BstNode remove(BstNode node, K key, V value) {
         if (node == null) return null;
-        int cmp = node.key.compareTo(key);
+        int cmp = key.compareTo(node.key);
         if (cmp < 0) {
             node.left = remove(node.left, key, value);
         }
@@ -176,9 +201,9 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
             BstNode minNode = findMin(node.right);
             node.key = minNode.key;
             node.value = minNode.value;
-            remove(root.right, minNode.key);
+            remove(node.right, minNode.key);
         }
-        node.size = 1 +size(node.left) + size(node.right);
+        node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
 
