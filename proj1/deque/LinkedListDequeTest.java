@@ -110,7 +110,6 @@ public class LinkedListDequeTest {
         assertEquals("Should return null when removeLast is called on an empty Deque,", null, lld1.removeLast());
 
     }
-
     @Test
     public void equalTest() {
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
