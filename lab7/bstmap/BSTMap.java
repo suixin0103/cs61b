@@ -46,7 +46,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         }
         return node.value;
     }
-    public int size(BstNode node) {
+    private int size(BstNode node) {
         if (node == null) return 0;
         return node.size;
     }
@@ -72,7 +72,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         else {
             node.right = put(node.right, key, value);
         }
-        node.size  = 1 + node.left.size + node.right.size;
+        node.size  = 1 + size(node.left) + size(node.right);
         return node;
     }
     @Override
@@ -80,7 +80,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         throw new UnsupportedOperationException();
     }
 
-    public void DeleteMin() {
+    private void DeleteMin() {
         if (size() == 0) return;
         root = DeleteMin(root);
     }
@@ -92,7 +92,7 @@ public class BSTMap<K extends  Comparable<K>, V> implements Map61B<K, V>{
         node.size = 1 + size(root.left) + size(root.right);
         return node;
     }
-    public void DeleteMax() {
+    private void DeleteMax() {
         if (size() == 0) return;
         root = DeleteMax(root);
     }
